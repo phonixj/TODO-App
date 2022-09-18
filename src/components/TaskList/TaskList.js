@@ -1,16 +1,14 @@
 import Task from "../Task";
 
-const TaskList = ({ todos }) => {
-  const elements = todos.map((item) => {
-    const { id, statusItem, ...itemProps } = item;
-    return (
-      <li className={statusItem} key={id}>
-        <Task {...itemProps} />
-        <input type="text" className="edit" value="Editing task" />
-      </li>
-    );
-  });
-  return <ul className="todo-list">{elements}</ul>;
+const TaskList = ({ todos, onDeleted }) => {
+  return (
+    <ul className="todo-list">
+      {todos.map((todo) => {
+        const { id, ...itemProps } = todo;
+        return <Task key={id} {...itemProps} onDeleted={() => onDeleted(id)} />;
+      })}
+    </ul>
+  );
 };
 
 export default TaskList;
