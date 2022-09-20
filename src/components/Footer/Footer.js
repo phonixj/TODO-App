@@ -1,20 +1,23 @@
 import TasksFilter from "../TasksFilter";
+import { Component } from "react";
 
-const Footer = ({ filterList }) => {
-  const filter = filterList.map((item) => {
-    const { id, ...itemProps } = item;
+export default class Footer extends Component {
+  render() {
+    const { itemLeft, clearCompleted, filter, onFilterChange } = this.props;
     return (
-      <li key={id}>
-        <TasksFilter {...itemProps} />
-      </li>
+      <footer className="footer">
+        <span className="todo-count">{itemLeft} items left</span>
+        <ul className="filters">
+          <TasksFilter
+            filter={filter}
+            onFilterChange={onFilterChange}
+            buttons={this.buttons}
+          />
+        </ul>
+        <button className="clear-completed" onClick={clearCompleted}>
+          Clear completed
+        </button>
+      </footer>
     );
-  });
-  return (
-    <footer className="footer">
-      <span className="todo-count">1 items left</span>
-      <ul className="filters">{filter}</ul>
-      <button className="clear-completed">Clear completed</button>
-    </footer>
-  );
-};
-export default Footer;
+  }
+}
