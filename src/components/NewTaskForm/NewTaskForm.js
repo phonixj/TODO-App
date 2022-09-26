@@ -1,8 +1,13 @@
-import { Component } from "react";
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class NewTaskForm extends Component {
   state = {
-    label: "",
+    label: '',
+  };
+
+  static propTypes = {
+    onItemAdded: PropTypes.func.isRequired,
   };
 
   onLabelChange = (e) => {
@@ -18,7 +23,7 @@ export default class NewTaskForm extends Component {
     }
     this.props.onItemAdded(this.state.label);
     this.setState({
-      label: "",
+      label: '',
     });
   };
 

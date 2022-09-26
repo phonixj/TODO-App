@@ -1,9 +1,10 @@
-import { createRoot } from "react-dom/client";
-import TodoApp from "./components/TodoApp";
+import { createRoot } from 'react-dom/client';
 
-import "./index.css";
+import TodoApp from './components/TodoApp';
 
-const container = document.getElementById("root");
+import './index.css';
+
+const container = document.getElementById('root');
 const root = createRoot(container);
 
 root.render(<TodoApp />);
