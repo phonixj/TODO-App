@@ -8,12 +8,6 @@ export default class TaskList extends Component {
     label: '',
   };
 
-  onLabelChange = (e) => {
-    this.setState({
-      label: e.target.value,
-    });
-  };
-
   onSubmitEdit = (e) => {
     e.preventDefault();
   };
@@ -33,18 +27,7 @@ export default class TaskList extends Component {
               onToggleDone={() => onToggleDone(id)}
               onToggleEdit={() => onToggleEdit(id)}
               onSubmitEdit={() => onSubmitEdit(id)}
-            >
-              {/*{todo.editing && (*/}
-              {/*  <form onSubmit={this.onSubmitEdit}>*/}
-              {/*    <input*/}
-              {/*      type="text"*/}
-              {/*      className="edit"*/}
-              {/*      value={this.state.label}*/}
-              {/*      onChange={this.onLabelChange}*/}
-              {/*    />*/}
-              {/*  </form>*/}
-              {/*)}*/}
-            </Task>
+            />
           );
         })}
       </ul>
@@ -58,10 +41,12 @@ TaskList.propTypes = {
       label: PropTypes.string,
       done: PropTypes.bool,
       editing: PropTypes.bool,
+      addingTime: PropTypes.string,
       id: PropTypes.number,
     })
   ).isRequired,
   onDeleted: PropTypes.func.isRequired,
   onToggleDone: PropTypes.func.isRequired,
   onToggleEdit: PropTypes.func.isRequired,
+  onSubmitEdit: PropTypes.func.isRequired,
 };

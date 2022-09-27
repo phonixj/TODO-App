@@ -3,15 +3,13 @@ import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
 export default class Task extends Component {
-  static defaultProps = {
-    label: 'Miss text',
-  };
-
   static propTypes = {
-    label: PropTypes.string,
     onDeleted: PropTypes.func.isRequired,
     done: PropTypes.bool.isRequired,
     onToggleDone: PropTypes.func.isRequired,
+    addingTime: PropTypes.string.isRequired,
+    editing: PropTypes.bool.isRequired,
+    onToggleEdit: PropTypes.func.isRequired,
   };
 
   state = {
@@ -40,7 +38,6 @@ export default class Task extends Component {
     if (done) {
       classes.push('completed');
     }
-
     if (editing) {
       classes.push('editing');
     }
