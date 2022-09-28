@@ -8,12 +8,8 @@ export default class TaskList extends Component {
     label: '',
   };
 
-  onSubmitEdit = (e) => {
-    e.preventDefault();
-  };
-
   render() {
-    const { todos, onDeleted, onToggleDone, onToggleEdit, onSubmitEdit } = this.props;
+    const { todos, onDeleted, onToggleDone, onToggleEdit } = this.props;
     return (
       <ul className="todo-list">
         {todos.map((todo) => {
@@ -26,7 +22,6 @@ export default class TaskList extends Component {
               onDeleted={() => onDeleted(id)}
               onToggleDone={() => onToggleDone(id)}
               onToggleEdit={() => onToggleEdit(id)}
-              onSubmitEdit={() => onSubmitEdit(id)}
             />
           );
         })}
@@ -41,12 +36,11 @@ TaskList.propTypes = {
       label: PropTypes.string,
       done: PropTypes.bool,
       editing: PropTypes.bool,
-      addingTime: PropTypes.string,
+      addingTime: PropTypes.instanceOf(Date),
       id: PropTypes.number,
     })
   ).isRequired,
   onDeleted: PropTypes.func.isRequired,
   onToggleDone: PropTypes.func.isRequired,
   onToggleEdit: PropTypes.func.isRequired,
-  onSubmitEdit: PropTypes.func.isRequired,
 };

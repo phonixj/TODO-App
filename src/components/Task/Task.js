@@ -7,7 +7,7 @@ export default class Task extends Component {
     onDeleted: PropTypes.func.isRequired,
     done: PropTypes.bool.isRequired,
     onToggleDone: PropTypes.func.isRequired,
-    addingTime: PropTypes.string.isRequired,
+    addingTime: PropTypes.instanceOf(Date).isRequired,
     editing: PropTypes.bool.isRequired,
     onToggleEdit: PropTypes.func.isRequired,
   };

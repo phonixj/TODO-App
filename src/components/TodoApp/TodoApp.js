@@ -132,7 +132,6 @@ export default class TodoApp extends Component {
             onDeleted={this.deleteItem}
             onToggleDone={this.onToggleDone}
             onToggleEdit={this.onToggleEdit}
-            onSubmitEdit={this.onSubmitEdit}
           />
           <Footer
             filterList={this.filterList}
