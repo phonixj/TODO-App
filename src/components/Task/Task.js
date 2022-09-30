@@ -56,7 +56,6 @@ export default class Task extends Component {
           <button className="icon icon-edit" onClick={onToggleEdit}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>
         </div>
-        {/*{this.props.children}*/}
         {editing && (
           <form onSubmit={this.onSubmit}>
             <input

@@ -14,7 +14,6 @@ export default class TaskList extends Component {
       <ul className="todo-list">
         {todos.map((todo) => {
           const { id, ...itemProps } = todo;
-
           return (
             <Task
               key={id}

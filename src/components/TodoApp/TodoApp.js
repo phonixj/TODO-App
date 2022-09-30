@@ -34,12 +34,11 @@ export default class TodoApp extends Component {
   }
 
   createTodoItem(label) {
-    const addingTime = new Date();
     return {
       label,
       done: false,
       editing: false,
-      addingTime,
+      addingTime: new Date(),
       id: this.maxId++,
     };
   }
@@ -47,9 +46,8 @@ export default class TodoApp extends Component {
   addItem = (text) => {
     const newItem = this.createTodoItem(text);
     this.setState(({ todoList }) => {
-      const newArr = [...todoList, newItem];
       return {
-        todoList: newArr,
+        todoList: [...todoList, newItem],
       };
     });
   };
@@ -65,35 +63,34 @@ export default class TodoApp extends Component {
     });
   };
 
+  toggleProperty = (todoData, id, propName) => {
+    const idx = todoData.findIndex((el) => el.id === id);
+
+    const oldItem = todoData[idx];
+    const newItem = { ...oldItem, [propName]: !oldItem[propName] };
+    return [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+  };
+
   onToggleDone = (id) => {
     this.setState(({ todoList }) => {
-      const idx = todoList.findIndex((el) => el.id === id);
-
-      const oldItem = todoList[idx];
-      const newItem = { ...oldItem, done: !oldItem.done };
       return {
-        todoList: [...todoList.slice(0, idx), newItem, ...todoList.slice(idx + 1)],
+        todoList: this.toggleProperty(todoList, id, 'done'),
       };
     });
   };
 
   onToggleEdit = (id) => {
     this.setState(({ todoList }) => {
-      const idx = todoList.findIndex((el) => el.id === id);
-
-      const oldItem = todoList[idx];
-      const newItem = { ...oldItem, editing: !oldItem.editing };
       return {
-        todoList: [...todoList.slice(0, idx), newItem, ...todoList.slice(idx + 1)],
+        todoList: this.toggleProperty(todoList, id, 'editing'),
       };
     });
   };
 
   clearCompleted = () => {
     this.setState(({ todoList }) => {
-      const newArr = todoList.filter((el) => !el.done);
       return {
-        todoList: newArr,
+        todoList: todoList.filter((el) => !el.done),
       };
     });
   };
