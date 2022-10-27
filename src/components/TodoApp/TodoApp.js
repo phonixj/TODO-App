@@ -9,42 +9,27 @@ export default class TodoApp extends Component {
 
   state = {
     todoList: [
-      this.createTodoItem('Completed task'),
-      this.createTodoItem('Editing task'),
-      this.createTodoItem('Active task'),
+      this.createTodoItem('Completed task', 10, 0),
+      this.createTodoItem('Editing task', 10, 0),
+      this.createTodoItem('Active task', 10, 0),
     ],
     filter: 'all',
-    dateId: 0,
   };
 
-  componentDidMount() {
-    this.timerId = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerId);
-  }
-
-  tick() {
-    this.setState(({ dateId }) => {
-      return {
-        dateId: dateId++,
-      };
-    });
-  }
-
-  createTodoItem(label) {
+  createTodoItem(label, min, sec) {
     return {
       label,
       done: false,
       editing: false,
       addingTime: new Date(),
+      min,
+      sec,
       id: this.maxId++,
     };
   }
 
-  addItem = (text) => {
-    const newItem = this.createTodoItem(text);
+  addItem = (text, min, sec) => {
+    const newItem = this.createTodoItem(text, min, sec);
     this.setState(({ todoList }) => {
       return {
         todoList: [...todoList, newItem],
@@ -65,7 +50,6 @@ export default class TodoApp extends Component {
 
   toggleProperty = (todoData, id, propName) => {
     const idx = todoData.findIndex((el) => el.id === id);
-
     const oldItem = todoData[idx];
     const newItem = { ...oldItem, [propName]: !oldItem[propName] };
     return [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
@@ -79,10 +63,13 @@ export default class TodoApp extends Component {
     });
   };
 
-  onToggleEdit = (id) => {
+  submitEdit = (id, label) => {
     this.setState(({ todoList }) => {
+      const idx = todoList.findIndex((el) => el.id === id);
+      const oldItem = todoList[idx];
+      const newItem = { ...oldItem, editing: !oldItem.editing, label: label };
       return {
-        todoList: this.toggleProperty(todoList, id, 'editing'),
+        todoList: [...todoList.slice(0, idx), newItem, ...todoList.slice(idx + 1)],
       };
     });
   };
@@ -128,7 +115,7 @@ export default class TodoApp extends Component {
             todos={visibleItem}
             onDeleted={this.deleteItem}
             onToggleDone={this.onToggleDone}
-            onToggleEdit={this.onToggleEdit}
+            submitEdit={this.submitEdit}
           />
           <Footer
             filterList={this.filterList}

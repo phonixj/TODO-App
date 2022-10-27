@@ -26,14 +26,9 @@
       }
     }
   },
-//  "overrides": [
-//    {
-//      "files": ["*.js"],
-//      "extends": ["prettier"]
-//    }
-//  ],
   "plugins": ["react", "prettier", "import"],
   "rules": {
+    "no-unused-vars": "warn",
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "prettier/prettier": "error",
     "linebreak-style": [0, "unix"],

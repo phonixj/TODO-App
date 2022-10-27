@@ -9,7 +9,7 @@ export default class TaskList extends Component {
   };
 
   render() {
-    const { todos, onDeleted, onToggleDone, onToggleEdit } = this.props;
+    const { todos, onDeleted, onToggleDone, submitEdit } = this.props;
     return (
       <ul className="todo-list">
         {todos.map((todo) => {
@@ -17,10 +17,11 @@ export default class TaskList extends Component {
           return (
             <Task
               key={id}
+              id={id}
               {...itemProps}
+              submitEdit={submitEdit}
               onDeleted={() => onDeleted(id)}
               onToggleDone={() => onToggleDone(id)}
-              onToggleEdit={() => onToggleEdit(id)}
             />
           );
         })}
@@ -41,5 +42,5 @@ TaskList.propTypes = {
   ).isRequired,
   onDeleted: PropTypes.func.isRequired,
   onToggleDone: PropTypes.func.isRequired,
-  onToggleEdit: PropTypes.func.isRequired,
+  // onToggleEdit: PropTypes.func.isRequired,
 };
