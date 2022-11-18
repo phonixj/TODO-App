@@ -1,118 +1,93 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import PropTypes from 'prop-types';
 
-export default class Task extends Component {
-  static propTypes = {
-    onDeleted: PropTypes.func.isRequired,
-    done: PropTypes.bool.isRequired,
-    onToggleDone: PropTypes.func.isRequired,
-    addingTime: PropTypes.instanceOf(Date).isRequired,
-    editing: PropTypes.bool.isRequired,
-  };
+const Task = ({ label, min, sec, submitEdit, id, onDeleted, done, onToggleDone, addingTime, editing }) => {
+  const [labelValue, setLabelValue] = useState(label);
+  const [createTime, setCreateTime] = useState('less than 5 seconds');
+  const [isCounting, setIsCounting] = useState(false);
+  const [timeleft, setTimeleft] = useState(Number(min * 60) + Number(sec));
 
-  state = {
-    label: this.props.label,
-    dateId: 0,
-    isCounting: false,
-    timeleft: Number(this.props.min * 60) + Number(this.props.sec),
-  };
+  useEffect(() => {
+    const timerId = setInterval(() => tick(), 1000);
+    return () => clearInterval(timerId);
+  }, [isCounting]);
 
-  componentDidMount() {
-    this.timerId = setInterval(() => this.tick(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerId);
-  }
-
-  tick() {
-    this.setState(({ dateId, isCounting, timeleft }) => {
-      if (isCounting) {
-        timeleft > 0 ? (timeleft -= 1) : 0;
-      }
-      return {
-        timeleft: timeleft,
-        dateId: dateId++,
-      };
-    });
-  }
-
-  onStartCounting = () => {
-    this.setState({
-      isCounting: true,
-    });
-  };
-
-  onStopCounting = () => {
-    this.setState({
-      isCounting: false,
-    });
-  };
-
-  onLabelChange = (e) => {
-    this.setState({
-      label: e.target.value,
-    });
-  };
-
-  onSubmit = (e) => {
-    e.preventDefault();
-    this.props.submitEdit(this.props.id, this.state.label);
-  };
-
-  onBlur = () => {
-    this.props.submitEdit(this.props.id, this.state.label);
-  };
-
-  render() {
-    const { onDeleted, done, onToggleDone, addingTime, editing, submitEdit, id } = this.props;
-    const classes = [];
-    const { timeleft } = this.state;
-
-    const minutes = Math.floor(timeleft / 60)
-      .toString()
-      .padStart(2, '0');
-    const seconds = (timeleft - minutes * 60).toString().padStart(2, '0');
-    if (done) {
-      classes.push('completed');
+  const tick = () => {
+    if (isCounting) {
+      timeleft > 0 ? setTimeleft((time) => time - 1) : 0;
     }
-    if (editing) {
-      classes.push('editing');
-    }
-    return (
-      <li className={classes.join(' ')}>
-        <div className="view">
-          <input className="toggle" type="checkbox" onClick={onToggleDone} defaultChecked={done} />
-          <section>
-            <span className="title">{this.state.label}</span>
-            <span className="description">
-              <button className="icon icon-play" onClick={this.onStartCounting}></button>
-              <button className="icon icon-pause" onClick={this.onStopCounting}></button>
-              {` ${minutes}:${seconds}`}
-            </span>
-            <span className="description">
-              {formatDistanceToNow(addingTime, {
-                includeSeconds: true,
-              })}
-            </span>
-          </section>
-          <button className="icon icon-edit" onClick={() => submitEdit(id)}></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
-        </div>
-        {editing && (
-          <form onSubmit={this.onSubmit}>
-            <input
-              type="text"
-              className="edit"
-              value={this.state.label}
-              onChange={this.onLabelChange}
-              onBlur={this.onBlur}
-              autoFocus
-            />
-          </form>
-        )}
-      </li>
+    setCreateTime(
+      formatDistanceToNow(addingTime, {
+        includeSeconds: true,
+      })
     );
+  };
+
+  const onStartCounting = () => {
+    setIsCounting(true);
+  };
+
+  const onStopCounting = () => {
+    setIsCounting(false);
+  };
+
+  const onLabelChange = (e) => {
+    setLabelValue(e.target.value);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    submitEdit(id, labelValue);
+  };
+
+  const onBlur = () => {
+    submitEdit(id, labelValue);
+  };
+
+  const classes = [];
+  const minutes = Math.floor(timeleft / 60)
+    .toString()
+    .padStart(2, '0');
+  const seconds = (timeleft - minutes * 60).toString().padStart(2, '0');
+  if (done) {
+    classes.push('completed');
   }
-}
+  if (editing) {
+    classes.push('editing');
+  }
+
+  return (
+    <li className={classes.join(' ')}>
+      <div className="view">
+        <input className="toggle" type="checkbox" onClick={onToggleDone} defaultChecked={done} />
+        <section>
+          <span className="title">{labelValue}</span>
+          <span className="description">
+            <button className="icon icon-play" onClick={onStartCounting}></button>
+            <button className="icon icon-pause" onClick={onStopCounting}></button>
+            {` ${minutes}:${seconds}`}
+          </span>
+          <span className="description">{createTime}</span>
+        </section>
+        <button className="icon icon-edit" onClick={() => submitEdit(id)}></button>
+        <button className="icon icon-destroy" onClick={onDeleted}></button>
+      </div>
+      {editing && (
+        <form onSubmit={onSubmit}>
+          <input type="text" className="edit" value={labelValue} onChange={onLabelChange} onBlur={onBlur} autoFocus />
+        </form>
+      )}
+    </li>
+  );
+};
+
+Task.propTypes = {
+  onDeleted: PropTypes.func.isRequired,
+  done: PropTypes.bool.isRequired,
+  onToggleDone: PropTypes.func.isRequired,
+  addingTime: PropTypes.instanceOf(Date).isRequired,
+  editing: PropTypes.bool.isRequired,
+};
+
+export default Task;
